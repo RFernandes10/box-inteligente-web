@@ -15,6 +15,19 @@
 
 ---
 
+## 🎬 Demo
+
+<div align="center">
+  <video src="docs/demo/demo.mp4" controls width="820"></video>
+</div>
+
+<div align="center">
+  <img src="docs/demo/dashboard.png" alt="Dashboard" width="47%">
+  <img src="docs/demo/overview.png" alt="Visão geral" width="47%">
+</div>
+
+---
+
 ## 📋 Overview
 
 Modern single-page application for managing inventory, stock movements, and business intelligence reports. Built with **React 18**, **TypeScript**, and **TailwindCSS** — featuring a responsive dashboard with real-time charts, dark mode, and **role-based navigation** (Admin / Manager / Stockist).
