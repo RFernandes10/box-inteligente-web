@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plus, Edit, Trash2, Search } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useAuthStore } from '@/stores/authStore';
+import { canEditProducts, canDeleteProducts } from '@/utils/roles';
 
 export function BrandsPage() {
   const [search, setSearch] = useState('');
@@ -18,7 +19,7 @@ export function BrandsPage() {
   const queryClient = useQueryClient();
   const { user } = useAuthStore();
 
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ['brands', search],
     queryFn: async () => {
       const params = search ? `?search=${search}` : '';
@@ -48,7 +49,8 @@ export function BrandsPage() {
   });
 
   const resetForm = () => { setShowForm(false); setEditingBrand(null); setName(''); setDescription(''); };
-  const canEdit = user?.role === 'ADMIN' || user?.role === 'MANAGER';
+  const canEdit = canEditProducts(user?.role);
+  const canDelete = canDeleteProducts(user?.role);
 
   return (
     <div className="space-y-6">
@@ -94,7 +96,7 @@ export function BrandsPage() {
                     <Button variant="ghost" size="icon" onClick={() => { setEditingBrand(brand); setName(brand.name); setDescription(brand.description || ''); setShowForm(true); }}>
                       <Edit size={16} />
                     </Button>
-                    {user?.role === 'ADMIN' && (
+                    {canDelete && (
                       <Button variant="ghost" size="icon" onClick={() => { if (confirm('Remover?')) deleteMutation.mutate(brand.id); }}>
                         <Trash2 size={16} className="text-red-500" />
                       </Button>

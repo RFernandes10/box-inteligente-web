@@ -5,11 +5,13 @@ import api from '@/services/api';
 import { Product, Pagination } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Plus, Search, Edit, Trash2, Eye, ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useAuthStore } from '@/stores/authStore';
 import { useDebounce } from '@/hooks/useDebounce';
+import { canEditProducts, canDeleteProducts } from '@/utils/roles';
+import { formatCurrency } from '@/utils/format';
 
 export function ProductListPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -38,8 +40,8 @@ export function ProductListPage() {
     onError: () => toast.error('Erro ao remover produto'),
   });
 
-  const canEdit = user?.role === 'ADMIN' || user?.role === 'MANAGER';
-  const canDelete = user?.role === 'ADMIN';
+  const canEdit = canEditProducts(user?.role);
+  const canDelete = canDeleteProducts(user?.role);
 
   const getStockBadge = (product: Product) => {
     if (product.currentStock === 0) return <span className="px-2 py-1 text-xs rounded-full bg-red-100 text-red-700">Sem Estoque</span>;
@@ -121,7 +123,7 @@ export function ProductListPage() {
                         <td className="py-3 px-4 text-sm">{product.internalCode}</td>
                         <td className="py-3 px-4 text-sm">{product.brand.name}</td>
                         <td className="py-3 px-4 text-sm">{product.category.name}</td>
-                        <td className="py-3 px-4 text-sm text-right">R$ {Number(product.salePrice).toFixed(2)}</td>
+                        <td className="py-3 px-4 text-sm text-right">{formatCurrency(product.salePrice)}</td>
                         <td className="py-3 px-4 text-sm text-right font-medium">{product.currentStock}</td>
                         <td className="py-3 px-4 text-center">{getStockBadge(product)}</td>
                         <td className="py-3 px-4">

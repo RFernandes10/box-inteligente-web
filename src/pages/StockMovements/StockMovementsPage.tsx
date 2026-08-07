@@ -5,13 +5,17 @@ import { StockMovement, Product } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowDown, ArrowUp, Search, Plus } from 'lucide-react';
+import { ArrowDown, ArrowUp, Search } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useDebounce } from '@/hooks/useDebounce';
+import { useAuthStore } from '@/stores/authStore';
+import { canViewHistory } from '@/utils/roles';
+import { assertValidMovement, getApiError } from '@/utils/errors';
 
 export function StockMovementsPage() {
-  const [tab, setTab] = useState<'history' | 'entry' | 'exit'>('history');
-  const [search, setSearch] = useState('');
+  const { user } = useAuthStore();
+  const viewHistory = canViewHistory(user?.role);
+  const [tab, setTab] = useState<'history' | 'entry' | 'exit'>(viewHistory ? 'history' : 'entry');
   const [productSearch, setProductSearch] = useState('');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState('');
@@ -21,7 +25,8 @@ export function StockMovementsPage() {
   const queryClient = useQueryClient();
 
   const { data: movements } = useQuery({
-    queryKey: ['movements', search],
+    queryKey: ['movements'],
+    enabled: viewHistory,
     queryFn: async () => {
       const { data } = await api.get('/stock-movements?limit=50');
       return data;
@@ -40,10 +45,12 @@ export function StockMovementsPage() {
 
   const entryMutation = useMutation({
     mutationFn: async () => {
-      if (!selectedProduct || !quantity) return;
+      const product = selectedProduct;
+      if (!product) throw new Error('Selecione um produto antes de registrar a entrada');
+      const qty = assertValidMovement(product, quantity);
       return api.post('/stock-movements/entry', {
-        productId: selectedProduct.id,
-        quantity: Number(quantity),
+        productId: product.id,
+        quantity: qty,
         reason,
         documentNumber,
       });
@@ -54,17 +61,18 @@ export function StockMovementsPage() {
       resetForm();
     },
     onError: (err: unknown) => {
-      const error = err as { response?: { data?: { error?: string } } };
-      toast.error(error.response?.data?.error || 'Erro ao registrar entrada');
+      toast.error(getApiError(err, 'Erro ao registrar entrada'));
     },
   });
 
   const exitMutation = useMutation({
     mutationFn: async () => {
-      if (!selectedProduct || !quantity) return;
+      const product = selectedProduct;
+      if (!product) throw new Error('Selecione um produto antes de registrar a saída');
+      const qty = assertValidMovement(product, quantity);
       return api.post('/stock-movements/exit', {
-        productId: selectedProduct.id,
-        quantity: Number(quantity),
+        productId: product.id,
+        quantity: qty,
         reason,
         documentNumber,
       });
@@ -75,8 +83,7 @@ export function StockMovementsPage() {
       resetForm();
     },
     onError: (err: unknown) => {
-      const error = err as { response?: { data?: { error?: string } } };
-      toast.error(error.response?.data?.error || 'Erro ao registrar saída');
+      toast.error(getApiError(err, 'Erro ao registrar saída'));
     },
   });
 
@@ -90,7 +97,9 @@ export function StockMovementsPage() {
       </div>
 
       <div className="flex gap-2">
-        <Button variant={tab === 'history' ? 'default' : 'outline'} onClick={() => setTab('history')}>Histórico</Button>
+        {viewHistory && (
+          <Button variant={tab === 'history' ? 'default' : 'outline'} onClick={() => setTab('history')}>Histórico</Button>
+        )}
         <Button variant={tab === 'entry' ? 'default' : 'outline'} onClick={() => setTab('entry')} className="bg-green-600 hover:bg-green-700">
           <ArrowDown className="h-4 w-4 mr-2" />Entrada
         </Button>
@@ -136,7 +145,7 @@ export function StockMovementsPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Quantidade *</label>
-                <Input type="number" min="1" value={quantity} onChange={(e) => setQuantity(e.target.value)} placeholder="0" />
+                <Input type="number" step="1" min="1" value={quantity} onChange={(e) => setQuantity(e.target.value)} placeholder="0" />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">Documento</label>

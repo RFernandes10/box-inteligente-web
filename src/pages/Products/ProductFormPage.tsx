@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Upload, X } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
+import { getApiError } from '@/utils/errors';
 
 const productSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
@@ -42,7 +43,7 @@ export function ProductFormPage() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const { register, handleSubmit, formState: { errors }, reset, setValue, control } = useForm<ProductFormData>({
+  const { register, handleSubmit, formState: { errors }, reset, control } = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
   });
 
@@ -110,8 +111,7 @@ export function ProductFormPage() {
       navigate('/products');
     },
     onError: (err: unknown) => {
-      const error = err as { response?: { data?: { error?: string } } };
-      toast.error(error.response?.data?.error || 'Erro ao salvar produto');
+      toast.error(getApiError(err, 'Erro ao salvar produto'));
     },
   });
 

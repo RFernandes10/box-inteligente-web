@@ -8,12 +8,9 @@ import {
   ArrowDownUp,
   Package,
   AlertTriangle,
-  TrendingDown,
-  TrendingUp,
-  BarChart3,
-  Calendar,
 } from 'lucide-react';
 import { toast } from 'react-toastify';
+import api from '@/services/api';
 
 const reports = [
   {
@@ -51,12 +48,10 @@ export function ReportsPage() {
   const downloadReport = async (endpoint: string, format: string, name: string) => {
     setDownloading(`${name}-${format}`);
     try {
-      const token = localStorage.getItem('accessToken');
-      const response = await fetch(`/api${endpoint}?format=${format}`, {
-        headers: { Authorization: `Bearer ${token}` },
+      const { data: blob } = await api.get(endpoint, {
+        params: { format },
+        responseType: 'blob',
       });
-      if (!response.ok) throw new Error('Erro ao gerar relatório');
-      const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
