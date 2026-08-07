@@ -18,7 +18,7 @@
 ## 🎬 Demo
 
 <div align="center">
-  <video src="docs/demo/demo.mp4" controls width="820"></video>
+  <img src="docs/demo/demo.gif" alt="Funcionamento do sistema" width="100%">
 </div>
 
 <div align="center">
