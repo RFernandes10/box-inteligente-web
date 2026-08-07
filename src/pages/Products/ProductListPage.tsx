@@ -110,7 +110,7 @@ export function ProductListPage() {
                         <td className="py-3 px-4">
                           <div className="flex items-center gap-3">
                             {product.imageUrl ? (
-                              <img src={product.imageUrl} alt={product.name} className="w-10 h-10 rounded-lg object-cover" />
+                              <img src={product.imageUrl} alt={product.name} width={40} height={40} loading="lazy" decoding="async" className="w-10 h-10 rounded-lg object-cover" />
                             ) : (
                               <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center text-muted-foreground text-xs">IMG</div>
                             )}

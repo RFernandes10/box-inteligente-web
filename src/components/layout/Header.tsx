@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react';
 export function Header() {
   const { user } = useAuthStore();
   const [darkMode, setDarkMode] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     if (darkMode) {
@@ -19,14 +18,14 @@ export function Header() {
     <header className="h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex items-center justify-between px-6 sticky top-0 z-30">
       <div className="flex items-center gap-4 flex-1 max-w-md">
         <div className="relative w-full">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
-          <input
-            type="text"
-            placeholder="Buscar produtos, códigos..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-lg border bg-muted/50 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
-          />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" aria-hidden="true" />
+          <a
+            href="/products"
+            className="w-full pl-10 pr-4 py-2 rounded-lg border bg-muted/50 text-sm flex items-center text-muted-foreground hover:bg-muted/70 transition-colors"
+            aria-label="Buscar produtos"
+          >
+            Buscar produtos, códigos...
+          </a>
         </div>
       </div>
 
