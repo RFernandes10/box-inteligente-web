@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Cookie, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'react-toastify';
+import { getApiError } from '@/utils/errors';
 
 export function LoginPage() {
   const [email, setEmail] = useState('');
@@ -24,8 +25,7 @@ export function LoginPage() {
       toast.success('Login realizado com sucesso!');
       navigate('/');
     } catch (err: unknown) {
-      const error = err as { response?: { data?: { error?: string } } };
-      toast.error(error.response?.data?.error || 'Erro ao fazer login');
+      toast.error(getApiError(err, 'Erro ao fazer login'));
     } finally {
       setLoading(false);
     }

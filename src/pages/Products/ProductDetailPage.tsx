@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Edit, ArrowDown, ArrowUp, Package } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import { getUnitLabel, getWeightDisplay } from '@/utils/units';
+import { canEditProducts } from '@/utils/roles';
+import { formatCurrency } from '@/utils/format';
 
 export function ProductDetailPage() {
   const { id } = useParams();
@@ -25,7 +27,7 @@ export function ProductDetailPage() {
   if (isLoading) return <div className="animate-pulse space-y-6">{Array.from({ length: 3 }).map((_, i) => <div key={i} className="h-40 bg-muted rounded-xl" />)}</div>;
   if (!product) return <p>Produto não encontrado</p>;
 
-  const canEdit = user?.role === 'ADMIN' || user?.role === 'MANAGER';
+  const canEdit = canEditProducts(user?.role);
 
   return (
     <div className="space-y-6">
@@ -55,8 +57,8 @@ export function ProductDetailPage() {
               <div><p className="text-sm text-muted-foreground">Unidade</p><p className="font-medium">{getUnitLabel(product.unit)}</p></div>
               <div><p className="text-sm text-muted-foreground">Peso</p><p className="font-medium">{getWeightDisplay(product.weight, product.unit)}</p></div>
               <div><p className="text-sm text-muted-foreground">Localização</p><p className="font-medium">{product.location || '-'}</p></div>
-              <div><p className="text-sm text-muted-foreground">Preço de Custo</p><p className="font-medium">R$ {Number(product.costPrice).toFixed(2)}</p></div>
-              <div><p className="text-sm text-muted-foreground">Preço de Venda</p><p className="font-medium">R$ {Number(product.salePrice).toFixed(2)}</p></div>
+              <div><p className="text-sm text-muted-foreground">Preço de Custo</p><p className="font-medium">{formatCurrency(product.costPrice)}</p></div>
+              <div><p className="text-sm text-muted-foreground">Preço de Venda</p><p className="font-medium">{formatCurrency(product.salePrice)}</p></div>
               <div><p className="text-sm text-muted-foreground">Validade</p><p className="font-medium">{product.expirationDate ? new Date(product.expirationDate).toLocaleDateString('pt-BR') : '-'}</p></div>
             </div>
             {product.description && (

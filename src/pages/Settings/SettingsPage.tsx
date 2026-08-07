@@ -21,7 +21,12 @@ export function SettingsPage() {
 
   const mutation = useMutation({
     mutationFn: async () => {
-      if (editingUser) return api.put(`/users/${editingUser.id}`, form);
+      if (editingUser) {
+        const { password, ...base } = form;
+        const payload: Record<string, unknown> = { ...base };
+        if (password) payload.password = password;
+        return api.put(`/users/${editingUser.id}`, payload);
+      }
       return api.post('/users', form);
     },
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['users'] }); toast.success('Usuário salvo!'); resetForm(); },

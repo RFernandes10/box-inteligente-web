@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plus, Edit, Trash2, Search, Truck } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useAuthStore } from '@/stores/authStore';
+import { canEditProducts, canDeleteProducts } from '@/utils/roles';
 
 export function SuppliersPage() {
   const [search, setSearch] = useState('');
@@ -41,7 +42,8 @@ export function SuppliersPage() {
   });
 
   const resetForm = () => { setShowForm(false); setEditingSupplier(null); setForm({ name: '', cnpj: '', email: '', phone: '', address: '', responsible: '' }); };
-  const canEdit = user?.role === 'ADMIN' || user?.role === 'MANAGER';
+  const canEdit = canEditProducts(user?.role);
+  const canDelete = canDeleteProducts(user?.role);
 
   return (
     <div className="space-y-6">
@@ -96,7 +98,7 @@ export function SuppliersPage() {
                     <Button variant="ghost" size="icon" onClick={() => { setEditingSupplier(supplier); setForm({ name: supplier.name, cnpj: supplier.cnpj || '', email: supplier.email || '', phone: supplier.phone || '', address: supplier.address || '', responsible: supplier.responsible || '' }); setShowForm(true); }}>
                       <Edit size={16} />
                     </Button>
-                    {user?.role === 'ADMIN' && (
+                    {canDelete && (
                       <Button variant="ghost" size="icon" onClick={() => { if (confirm('Remover?')) deleteMutation.mutate(supplier.id); }}>
                         <Trash2 size={16} className="text-red-500" />
                       </Button>

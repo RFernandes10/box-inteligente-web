@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plus, Edit, Trash2, Search } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useAuthStore } from '@/stores/authStore';
+import { canEditProducts, canDeleteProducts } from '@/utils/roles';
 
 export function CategoriesPage() {
   const [search, setSearch] = useState('');
@@ -42,7 +43,8 @@ export function CategoriesPage() {
   });
 
   const resetForm = () => { setShowForm(false); setEditingCategory(null); setName(''); setDescription(''); };
-  const canEdit = user?.role === 'ADMIN' || user?.role === 'MANAGER';
+  const canEdit = canEditProducts(user?.role);
+  const canDelete = canDeleteProducts(user?.role);
 
   return (
     <div className="space-y-6">
@@ -88,7 +90,7 @@ export function CategoriesPage() {
                     <Button variant="ghost" size="icon" onClick={() => { setEditingCategory(cat); setName(cat.name); setDescription(cat.description || ''); setShowForm(true); }}>
                       <Edit size={16} />
                     </Button>
-                    {user?.role === 'ADMIN' && (
+                    {canDelete && (
                       <Button variant="ghost" size="icon" onClick={() => { if (confirm('Remover?')) deleteMutation.mutate(cat.id); }}>
                         <Trash2 size={16} className="text-red-500" />
                       </Button>

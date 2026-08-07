@@ -17,6 +17,7 @@ import { StockMovementsPage } from '@/pages/StockMovements/StockMovementsPage';
 import { ReportsPage } from '@/pages/Reports/ReportsPage';
 import { SettingsPage } from '@/pages/Settings/SettingsPage';
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
+import { RequireRole } from '@/components/layout/RequireRole';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -40,20 +41,22 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<DashboardPage />} />
+            <Route element={<RequireRole roles={['ADMIN', 'MANAGER']} redirectTo="/products" />}>
+              <Route index element={<DashboardPage />} />
+              <Route path="/reports" element={<ReportsPage />} />
+            </Route>
             <Route path="/products" element={<ProductListPage />} />
-            <Route path="/products/new" element={<ProductFormPage />} />
             <Route path="/products/:id" element={<ProductDetailPage />} />
-            <Route path="/products/:id/edit" element={<ProductFormPage />} />
+            <Route element={<RequireRole roles={['ADMIN', 'MANAGER']} redirectTo="/products" />}>
+              <Route path="/products/new" element={<ProductFormPage />} />
+              <Route path="/products/:id/edit" element={<ProductFormPage />} />
+            </Route>
             <Route path="/brands" element={<BrandsPage />} />
             <Route path="/categories" element={<CategoriesPage />} />
             <Route path="/suppliers" element={<SuppliersPage />} />
             <Route path="/movements" element={<StockMovementsPage />} />
-            <Route path="/reports" element={<ProtectedRoute allowedRoles={['ADMIN', 'MANAGER']} />}>
-              <Route index element={<ReportsPage />} />
-            </Route>
-            <Route path="/settings" element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
-              <Route index element={<SettingsPage />} />
+            <Route element={<RequireRole roles={['ADMIN']} redirectTo="/" />}>
+              <Route path="/settings" element={<SettingsPage />} />
             </Route>
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />

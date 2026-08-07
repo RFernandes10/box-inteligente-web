@@ -3,12 +3,8 @@ import { useAuthStore } from '@/stores/authStore';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 
-interface ProtectedRouteProps {
-  allowedRoles?: string[];
-}
-
-export function ProtectedRoute({ allowedRoles }: ProtectedRouteProps) {
-  const { isAuthenticated, isLoading, user } = useAuthStore();
+export function ProtectedRoute() {
+  const { isAuthenticated, isLoading } = useAuthStore();
 
   if (isLoading) {
     return (
@@ -20,10 +16,6 @@ export function ProtectedRoute({ allowedRoles }: ProtectedRouteProps) {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
-  }
-
-  if (allowedRoles && user && !allowedRoles.includes(user.role)) {
-    return <Navigate to="/" replace />;
   }
 
   return (
