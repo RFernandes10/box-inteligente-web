@@ -3,10 +3,9 @@ import api from '@/services/api';
 import { DashboardSummary } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Package, TrendingUp, TrendingDown, AlertTriangle, XCircle, DollarSign, BarChart3 } from 'lucide-react';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend, Filler } from 'chart.js';
-import { Line } from 'react-chartjs-2';
+import { lazy, Suspense } from 'react';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend, Filler);
+const MovementsChart = lazy(() => import('./MovementsChart').then((m) => ({ default: m.MovementsChart })));
 
 export function DashboardPage() {
   const { data: summary, isLoading } = useQuery<DashboardSummary>({
@@ -94,34 +93,11 @@ export function DashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <Line
-              data={{
-                labels: movementsChart?.entries?.map((e: { date: string }) => new Date(e.date).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })) || [],
-                datasets: [
-                  {
-                    label: 'Entradas',
-                    data: movementsChart?.entries?.map((e: { total: number }) => e.total) || [],
-                    borderColor: '#22c55e',
-                    backgroundColor: 'rgba(34, 197, 94, 0.1)',
-                    fill: true,
-                    tension: 0.4,
-                  },
-                  {
-                    label: 'Saídas',
-                    data: movementsChart?.exits?.map((e: { total: number }) => e.total) || [],
-                    borderColor: '#ef4444',
-                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                    fill: true,
-                    tension: 0.4,
-                  },
-                ],
-              }}
-              options={{
-                responsive: true,
-                plugins: { legend: { position: 'bottom' } },
-                scales: { y: { beginAtZero: true } },
-              }}
-            />
+            <div className="h-64">
+              <Suspense fallback={<div className="h-full bg-muted rounded animate-pulse" />}>
+                <MovementsChart data={movementsChart} />
+              </Suspense>
+            </div>
           </CardContent>
         </Card>
 
