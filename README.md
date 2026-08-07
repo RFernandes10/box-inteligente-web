@@ -22,8 +22,8 @@
 </div>
 
 <div align="center">
-  <img src="docs/demo/dashboard.png" alt="Dashboard" width="47%">
-  <img src="docs/demo/overview.png" alt="Visão geral" width="47%">
+  <img src="docs/demo/dashboard.png" alt="Dashboard" width="49%">
+  <img src="docs/demo/overview.png" alt="Visão geral" width="30%">
 </div>
 
 ---
