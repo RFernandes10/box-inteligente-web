@@ -17,22 +17,23 @@
 
 ## 📋 Overview
 
-Modern single-page application for managing inventory, stock movements, and business intelligence reports. Built with **React 18**, **TypeScript**, and **TailwindCSS** — featuring a responsive dashboard with real-time charts, dark mode, and role-based navigation.
+Modern single-page application for managing inventory, stock movements, and business intelligence reports. Built with **React 18**, **TypeScript**, and **TailwindCSS** — featuring a responsive dashboard with real-time charts, dark mode, and **role-based navigation** (Admin / Manager / Stockist).
 
-### Pages
+### Pages & Access
 
 ```
-/login          Login page
-/               Dashboard — charts, low-stock alerts, expiring products
-/products       Product listing with search & pagination
-/products/new   Create product form
-/products/:id   Product detail
-/brands         Brand management
-/categories     Category management
-/suppliers      Supplier management
-/movements      Stock movement register & history
-/reports        PDF / Excel / CSV report export
-/settings       User management (Admin only)
+/login                    Public — login
+/                         ADMIN/MANAGER — Dashboard (charts, low-stock, expiring)
+/products                 All roles — product listing with search & pagination
+/products/new             ADMIN/MANAGER — Create product form
+/products/:id             All roles — product detail
+/products/:id/edit        ADMIN/MANAGER — Edit product
+/brands                   Product brands
+/categories               Categories
+/suppliers                Suppliers
+/movements                All roles — stock movement register & history
+/reports                  ADMIN/MANAGER — PDF / Excel / CSV report export
+/settings                 ADMIN — user management
 ```
 
 ---
@@ -44,8 +45,8 @@ Modern single-page application for managing inventory, stock movements, and busi
 |---------|--------|
 | **Dark/Light Theme** | System-aware with manual toggle, persisted to localStorage |
 | **Responsive Layout** | Collapsible sidebar, mobile-friendly |
-| **Role-based UI** | Navigation and actions filtered by user role |
-| **Loading States** | React Query's built-in loading/skeleton states |
+| **Role-based UI** | Navigation and actions filtered by user role (client + server enforced) |
+| **Loading States** | React Query built-in loading/skeleton states |
 | **Toast Notifications** | Success/error feedback via react-toastify |
 
 ### Data Management
@@ -61,14 +62,14 @@ Modern single-page application for managing inventory, stock movements, and busi
 |---------|--------|
 | **React Hook Form** | Performant forms with minimal re-renders |
 | **Zod Schemas** | Shared validation between client and server |
-| **File Upload** | Drag-and-drop with react-dropzone + preview |
+| **Image Upload** | Native file input with live preview |
 | **Search** | Debounced input (300ms) for product/brand search |
 
 ### Charts & Reports
 - **Chart.js** line chart for entry/exit movement history
 - Dashboard summary cards (total products, low stock, alerts)
 - **PDF** generation (inventory, movements, low-stock)
-- **Excel** (.xlsx) and **CSV** export
+- **Excel** (.xlsx) and **CSV** export (served by the API)
 
 ---
 
@@ -87,7 +88,7 @@ Modern single-page application for managing inventory, stock movements, and busi
 | **Charts** | Chart.js 4 + react-chartjs-2 | Dashboard visualizations |
 | **Icons** | Lucide React | Consistent icon set |
 | **Notifications** | react-toastify | User feedback toasts |
-| **File Upload** | react-dropzone | Drag-and-drop image upload |
+| **Lint** | ESLint + typescript-eslint | Zero-warning code quality gate |
 
 ---
 
@@ -105,15 +106,16 @@ npm install
 npm run dev    # http://localhost:5173
 ```
 
-The dev server proxies `/api` requests to `http://localhost:3333` (configured in `vite.config.ts`).
+The Vite dev server proxies `/api` and `/uploads` to `http://localhost:3333` (see `vite.config.ts`).
 
 ### Production Build
 
 ```bash
-npm run build           # Outputs to dist/
+npm run build      # TypeScript compile + optimized bundle to dist/
+npm run lint       # ESLint (zero warnings)
 ```
 
-For production, set `VITE_API_URL` env var to your API endpoint.
+For production, set `VITE_API_URL` (defaults to `/api` when proxied).
 
 ---
 
@@ -136,13 +138,13 @@ For production, set `VITE_API_URL` env var to your API endpoint.
 ```
 src/
 ├── components/
-│   ├── layout/       Header, Sidebar, ProtectedRoute
+│   ├── layout/       Header, Sidebar, ProtectedRoute, RequireRole
 │   └── ui/           button, card, input, label (shadcn-style)
 ├── pages/            Login, Dashboard, Products, Brands, ...
 ├── services/         Axios instance with auth interceptor
 ├── stores/           Zustand auth store
 ├── types/            TypeScript interfaces
-└── utils/            cn() helper, unit formatters
+└── utils/            cn() helper, role guard, error/format helpers
 ```
 
 ---
