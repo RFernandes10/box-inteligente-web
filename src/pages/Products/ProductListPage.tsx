@@ -44,10 +44,10 @@ export function ProductListPage() {
   const canDelete = canDeleteProducts(user?.role);
 
   const getStockBadge = (product: Product) => {
-    if (product.currentStock === 0) return <span className="px-2 py-1 text-xs rounded-full bg-red-100 text-red-700">Sem Estoque</span>;
-    if (product.currentStock <= product.minStock) return <span className="px-2 py-1 text-xs rounded-full bg-orange-100 text-orange-700">Estoque Baixo</span>;
-    if (product.maxStock && product.currentStock >= product.maxStock) return <span className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-700">Estoque Cheio</span>;
-    return <span className="px-2 py-1 text-xs rounded-full bg-green-100 text-green-700">Normal</span>;
+    if (product.currentStock === 0) return <span className="px-2 py-1 text-xs rounded-full bg-danger-soft text-danger-soft-foreground">Sem Estoque</span>;
+    if (product.currentStock <= product.minStock) return <span className="px-2 py-1 text-xs rounded-full bg-warning-soft text-warning-soft-foreground">Estoque Baixo</span>;
+    if (product.maxStock && product.currentStock >= product.maxStock) return <span className="px-2 py-1 text-xs rounded-full bg-info-soft text-info-soft-foreground">Estoque Cheio</span>;
+    return <span className="px-2 py-1 text-xs rounded-full bg-success-soft text-success-soft-foreground">Normal</span>;
   };
 
   return (
@@ -138,7 +138,7 @@ export function ProductListPage() {
                             )}
                             {canDelete && (
                               <Button variant="ghost" size="icon" onClick={() => { if (confirm('Remover este produto?')) deleteMutation.mutate(product.id); }}>
-                                <Trash2 size={16} className="text-red-500" />
+                                <Trash2 size={16} className="text-destructive" />
                               </Button>
                             )}
                           </div>

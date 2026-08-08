@@ -33,13 +33,13 @@ export function DashboardPage() {
   });
 
   const cards = [
-    { title: 'Total de Produtos', value: summary?.totalProducts || 0, icon: Package, color: 'text-blue-600', bg: 'bg-blue-50' },
-    { title: 'Em Estoque', value: summary?.inStock || 0, icon: TrendingUp, color: 'text-green-600', bg: 'bg-green-50' },
-    { title: 'Estoque Baixo', value: summary?.lowStock || 0, icon: AlertTriangle, color: 'text-orange-600', bg: 'bg-orange-50' },
-    { title: 'Sem Estoque', value: summary?.noStock || 0, icon: XCircle, color: 'text-red-600', bg: 'bg-red-50' },
-    { title: 'Entradas Hoje', value: summary?.todayEntries || 0, icon: TrendingUp, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-    { title: 'Saídas Hoje', value: summary?.todayExits || 0, icon: TrendingDown, color: 'text-rose-600', bg: 'bg-rose-50' },
-    { title: 'Valor Total Estoque', value: `R$ ${(summary?.totalStockValue || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, icon: DollarSign, color: 'text-amber-600', bg: 'bg-amber-50' },
+    { title: 'Total de Produtos', value: summary?.totalProducts || 0, icon: Package, color: 'text-info-soft-foreground', bg: 'bg-info-soft' },
+    { title: 'Em Estoque', value: summary?.inStock || 0, icon: TrendingUp, color: 'text-success-soft-foreground', bg: 'bg-success-soft' },
+    { title: 'Estoque Baixo', value: summary?.lowStock || 0, icon: AlertTriangle, color: 'text-warning-soft-foreground', bg: 'bg-warning-soft' },
+    { title: 'Sem Estoque', value: summary?.noStock || 0, icon: XCircle, color: 'text-danger-soft-foreground', bg: 'bg-danger-soft' },
+    { title: 'Entradas Hoje', value: summary?.todayEntries || 0, icon: TrendingUp, color: 'text-success-soft-foreground', bg: 'bg-success-soft' },
+    { title: 'Saídas Hoje', value: summary?.todayExits || 0, icon: TrendingDown, color: 'text-danger-soft-foreground', bg: 'bg-danger-soft' },
+    { title: 'Valor Total Estoque', value: `R$ ${(summary?.totalStockValue || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, icon: DollarSign, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-950/30' },
   ];
 
   if (isLoading) {
@@ -112,13 +112,13 @@ export function DashboardPage() {
             {lowStock && lowStock.length > 0 ? (
               <div className="space-y-3">
                 {lowStock.slice(0, 5).map((p: Record<string, unknown>, i: number) => (
-                  <div key={i} className="flex items-center justify-between p-3 bg-orange-50 dark:bg-orange-950/20 rounded-lg">
+                  <div key={i} className="flex items-center justify-between p-3 bg-warning-soft rounded-lg">
                     <div>
                       <p className="font-medium text-sm">{String(p.name)}</p>
                       <p className="text-xs text-muted-foreground">{String(p.internalCode)}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-bold text-orange-600">{String(p.currentStock)} un</p>
+                      <p className="text-sm font-bold text-warning-soft-foreground">{String(p.currentStock)} un</p>
                       <p className="text-xs text-muted-foreground">Mín: {String(p.minStock)}</p>
                     </div>
                   </div>

@@ -4,34 +4,59 @@
 
 @layer base {
   :root {
+    color-scheme: light;
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
     --primary: 38 92% 50%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 25 95% 31%;
+    --primary-foreground: 28 95% 14%;
+    --secondary: 23 82% 31%;
     --secondary-foreground: 0 0% 100%;
     --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted-foreground: 215.4 16.3% 39%;
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 38 92% 50%;
+    --ring: 23 82% 31%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --success-soft: 142 76% 93%;
+    --success-soft-foreground: 158 72% 24%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 28 95% 14%;
+    --warning-soft: 45 92% 92%;
+    --warning-soft-foreground: 32 72% 24%;
+    --info: 221 83% 53%;
+    --info-foreground: 0 0% 100%;
+    --info-soft: 214 100% 94%;
+    --info-soft-foreground: 222 83% 30%;
+    --danger: 0 72.2% 55%;
+    --danger-foreground: 210 40% 98%;
+    --danger-soft: 0 96% 95%;
+    --danger-soft-foreground: 0 72% 40%;
+
+    --chart-grid: var(--border);
+    --chart-tick: var(--muted-foreground);
+    --chart-green: var(--success);
+    --chart-red: var(--danger);
+
     --radius: 0.75rem;
   }
 
   .dark {
+    color-scheme: dark;
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
+    --card: 222.2 84% 8.8%;
     --card-foreground: 210 40% 98%;
     --primary: 38 92% 50%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 25 95% 31%;
+    --primary-foreground: 28 95% 14%;
+    --secondary: 23 82% 31%;
     --secondary-foreground: 210 40% 98%;
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
@@ -41,8 +66,56 @@
     --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 38 92% 50%;
+    --ring: 38 92% 56%;
+
+    --success: 142 71% 54%;
+    --success-foreground: 0 0% 100%;
+    --success-soft: 142 64% 16%;
+    --success-soft-foreground: 142 71% 70%;
+    --warning: 38 92% 58%;
+    --warning-foreground: 28 95% 14%;
+    --warning-soft: 45 60% 16%;
+    --warning-soft-foreground: 40 90% 68%;
+    --info: 216 91% 60%;
+    --info-foreground: 0 0% 100%;
+    --info-soft: 216 70% 16%;
+    --info-soft-foreground: 214 90% 74%;
+    --danger: 0 72% 62%;
+    --danger-foreground: 210 40% 98%;
+    --danger-soft: 0 70% 15%;
+    --danger-soft-foreground: 348 80% 70%;
+
+    --chart-grid: var(--border);
+    --chart-tick: var(--muted-foreground);
+    --chart-green: var(--success);
+    --chart-red: var(--danger);
   }
+}
+
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition: color 0.25s ease, background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+:root {
+  --toastify-color-success: #16a34a;
+  --toastify-color-error: #dc2626;
+  --toastify-icon-color-success: #16a34a;
+  --toastify-icon-color-error: #dc2626;
+}
+
+.dark {
+  --toastify-color-success: #15803d;
+  --toastify-color-error: #b91c1c;
+  --toastify-icon-color-success: #4ade80;
+  --toastify-icon-color-error: #f87171;
+}
+
+.Toastify__toast-theme--colored.Toastify__toast--success,
+.Toastify__toast-theme--colored.Toastify__toast--error {
+  color: #fff;
 }
 
 @layer base {

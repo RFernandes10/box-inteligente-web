@@ -37,7 +37,7 @@ export function LoginPage() {
         <CardHeader className="text-center space-y-4">
           <div className="flex justify-center">
             <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center">
-              <Cookie className="h-8 w-8 text-white" />
+              <Cookie className="h-8 w-8 text-primary-foreground" />
             </div>
           </div>
           <div>

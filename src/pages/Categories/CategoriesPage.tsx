@@ -92,7 +92,7 @@ export function CategoriesPage() {
                     </Button>
                     {canDelete && (
                       <Button variant="ghost" size="icon" onClick={() => { if (confirm('Remover?')) deleteMutation.mutate(cat.id); }}>
-                        <Trash2 size={16} className="text-red-500" />
+                        <Trash2 size={16} className="text-destructive" />
                       </Button>
                     )}
                   </div>

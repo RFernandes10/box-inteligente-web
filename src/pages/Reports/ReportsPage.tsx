@@ -19,8 +19,8 @@ const reports = [
     description: 'Entradas e saídas por período',
     endpoint: '/reports/movements',
     icon: ArrowDownUp,
-    color: 'text-blue-600',
-    bg: 'bg-blue-50 dark:bg-blue-950/30',
+    color: 'text-info-soft-foreground',
+    bg: 'bg-info-soft',
   },
   {
     id: 'products',
@@ -28,8 +28,8 @@ const reports = [
     description: 'Todos os produtos cadastrados',
     endpoint: '/reports/products',
     icon: Package,
-    color: 'text-emerald-600',
-    bg: 'bg-emerald-50 dark:bg-emerald-950/30',
+    color: 'text-success-soft-foreground',
+    bg: 'bg-success-soft',
   },
   {
     id: 'low-stock',
@@ -37,8 +37,8 @@ const reports = [
     description: 'Produtos abaixo do mínimo',
     endpoint: '/reports/low-stock',
     icon: AlertTriangle,
-    color: 'text-orange-600',
-    bg: 'bg-orange-50 dark:bg-orange-950/30',
+    color: 'text-warning-soft-foreground',
+    bg: 'bg-warning-soft',
   },
 ];
 
@@ -98,7 +98,7 @@ export function ReportsPage() {
                     onClick={() => downloadReport(report.endpoint, 'pdf', report.id)}
                     disabled={downloading === `${report.id}-pdf`}
                   >
-                    <FileText className="h-4 w-4 mr-2 text-red-500" />
+                    <FileText className="h-4 w-4 mr-2 text-danger" />
                     {downloading === `${report.id}-pdf` ? 'Gerando...' : 'Baixar PDF'}
                   </Button>
                   <Button
@@ -108,7 +108,7 @@ export function ReportsPage() {
                     onClick={() => downloadReport(report.endpoint, 'excel', report.id)}
                     disabled={downloading === `${report.id}-excel`}
                   >
-                    <FileSpreadsheet className="h-4 w-4 mr-2 text-green-600" />
+                    <FileSpreadsheet className="h-4 w-4 mr-2 text-success" />
                     {downloading === `${report.id}-excel` ? 'Gerando...' : 'Baixar Excel'}
                   </Button>
                   <Button
@@ -118,7 +118,7 @@ export function ReportsPage() {
                     onClick={() => downloadReport(report.endpoint, 'csv', report.id)}
                     disabled={downloading === `${report.id}-csv`}
                   >
-                    <FileDown className="h-4 w-4 mr-2 text-blue-600" />
+                    <FileDown className="h-4 w-4 mr-2 text-info" />
                     {downloading === `${report.id}-csv` ? 'Gerando...' : 'Baixar CSV'}
                   </Button>
                 </div>

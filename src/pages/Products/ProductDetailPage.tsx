@@ -79,18 +79,18 @@ export function ProductDetailPage() {
               <p className="text-sm text-muted-foreground">unidades em estoque</p>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div className="text-center p-3 bg-orange-50 dark:bg-orange-950/20 rounded-lg">
+              <div className="text-center p-3 bg-warning-soft rounded-lg">
                 <p className="text-sm text-muted-foreground">Mínimo</p>
-                <p className="text-xl font-bold text-orange-600">{product.minStock}</p>
+                <p className="text-xl font-bold text-warning-soft-foreground">{product.minStock}</p>
               </div>
-              <div className="text-center p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
+              <div className="text-center p-3 bg-info-soft rounded-lg">
                 <p className="text-sm text-muted-foreground">Máximo</p>
-                <p className="text-xl font-bold text-blue-600">{product.maxStock || '-'}</p>
+                <p className="text-xl font-bold text-info-soft-foreground">{product.maxStock || '-'}</p>
               </div>
             </div>
             {product.currentStock <= product.minStock && (
-              <div className="p-3 bg-red-50 dark:bg-red-950/20 rounded-lg text-center">
-                <p className="text-sm font-medium text-red-600">⚠ Estoque abaixo do mínimo!</p>
+              <div className="p-3 bg-danger-soft rounded-lg text-center">
+                <p className="text-sm font-medium text-danger-soft-foreground">⚠ Estoque abaixo do mínimo!</p>
               </div>
             )}
           </CardContent>
@@ -106,9 +106,9 @@ export function ProductDetailPage() {
                 <div key={mov.id} className="flex items-center justify-between p-3 rounded-lg border">
                   <div className="flex items-center gap-3">
                     {mov.type === 'ENTRY' ? (
-                      <div className="p-2 rounded-full bg-green-100"><ArrowDown className="h-4 w-4 text-green-600" /></div>
+                      <div className="p-2 rounded-full bg-success-soft"><ArrowDown className="h-4 w-4 text-success-soft-foreground" /></div>
                     ) : (
-                      <div className="p-2 rounded-full bg-red-100"><ArrowUp className="h-4 w-4 text-red-600" /></div>
+                      <div className="p-2 rounded-full bg-danger-soft"><ArrowUp className="h-4 w-4 text-danger-soft-foreground" /></div>
                     )}
                     <div>
                       <p className="font-medium text-sm">{mov.type === 'ENTRY' ? 'Entrada' : 'Saída'} - {mov.quantity} un</p>

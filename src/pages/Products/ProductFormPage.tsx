@@ -144,7 +144,7 @@ export function ProductFormPage() {
                 <div className="space-y-2">
                   <Label>Nome *</Label>
                   <Input {...register('name')} placeholder="Nome do produto" />
-                  {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
+                  {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
                 </div>
                 <div className="space-y-2">
                   <Label>Código de Barras</Label>
@@ -164,7 +164,7 @@ export function ProductFormPage() {
                     <option value="">Selecione</option>
                     {brands?.map((b: { id: string; name: string }) => <option key={b.id} value={b.id}>{b.name}</option>)}
                   </select>
-                  {errors.brandId && <p className="text-xs text-red-500">{errors.brandId.message}</p>}
+                  {errors.brandId && <p className="text-xs text-destructive">{errors.brandId.message}</p>}
                 </div>
                 <div className="space-y-2">
                   <Label>Categoria *</Label>
@@ -172,7 +172,7 @@ export function ProductFormPage() {
                     <option value="">Selecione</option>
                     {categories?.map((c: { id: string; name: string }) => <option key={c.id} value={c.id}>{c.name}</option>)}
                   </select>
-                  {errors.categoryId && <p className="text-xs text-red-500">{errors.categoryId.message}</p>}
+                  {errors.categoryId && <p className="text-xs text-destructive">{errors.categoryId.message}</p>}
                 </div>
                 <div className="space-y-2">
                   <Label>Fornecedor</Label>
@@ -192,7 +192,7 @@ export function ProductFormPage() {
                 {imagePreview ? (
                   <div className="relative">
                     <img src={imagePreview} alt="Preview" className="w-full h-40 object-contain rounded-lg" />
-                    <button type="button" onClick={() => { setImageFile(null); setImagePreview(null); }} className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full">
+                    <button type="button" onClick={() => { setImageFile(null); setImagePreview(null); }} className="absolute top-1 right-1 p-1 bg-destructive text-destructive-foreground rounded-full">
                       <X size={14} />
                     </button>
                   </div>
@@ -216,12 +216,12 @@ export function ProductFormPage() {
               <div className="space-y-2">
                 <Label>Preço de Custo *</Label>
                 <Input type="number" step="0.01" {...register('costPrice')} placeholder="0.00" />
-                {errors.costPrice && <p className="text-xs text-red-500">{errors.costPrice.message}</p>}
+                {errors.costPrice && <p className="text-xs text-destructive">{errors.costPrice.message}</p>}
               </div>
               <div className="space-y-2">
                 <Label>Preço de Venda *</Label>
                 <Input type="number" step="0.01" {...register('salePrice')} placeholder="0.00" />
-                {errors.salePrice && <p className="text-xs text-red-500">{errors.salePrice.message}</p>}
+                {errors.salePrice && <p className="text-xs text-destructive">{errors.salePrice.message}</p>}
               </div>
               <div className="space-y-2">
                 <Label>Unidade</Label>

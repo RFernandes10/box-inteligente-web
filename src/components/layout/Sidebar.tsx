@@ -38,11 +38,11 @@ export function Sidebar() {
   return (
     <aside
       className={cn(
-        'fixed left-0 top-0 z-40 h-screen bg-secondary text-white transition-all duration-300 flex flex-col',
+        'fixed left-0 top-0 z-40 h-screen bg-secondary text-secondary-foreground transition-all duration-300 flex flex-col',
         collapsed ? 'w-16' : 'w-64'
       )}
     >
-      <div className="flex items-center justify-between p-4 border-b border-white/10">
+      <div className="flex items-center justify-between p-4 border-b border-secondary-foreground/10">
         {!collapsed && (
           <div className="flex items-center gap-2">
             <Cookie className="h-8 w-8 text-amber-400" />
@@ -71,7 +71,7 @@ export function Sidebar() {
                   to={item.path}
                   className={cn(
                     'flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors',
-                    isActive ? 'bg-amber-500 text-white' : 'hover:bg-white/10 text-gray-300'
+                    isActive ? 'bg-primary text-primary-foreground' : 'hover:bg-white/10 text-secondary-foreground/70'
                   )}
                 >
                   <Icon size={20} />
@@ -83,16 +83,16 @@ export function Sidebar() {
         </ul>
       </nav>
 
-      <div className="p-4 border-t border-white/10">
+      <div className="p-4 border-t border-secondary-foreground/10">
         {!collapsed && user && (
           <div className="mb-3">
             <p className="text-sm font-medium truncate">{user.name}</p>
-            <p className="text-xs text-gray-400">{user.role}</p>
+            <p className="text-xs text-secondary-foreground/50">{user.role}</p>
           </div>
         )}
         <button
           onClick={logout}
-          className="flex items-center gap-2 w-full px-3 py-2 rounded-lg hover:bg-white/10 text-gray-300 transition-colors"
+          className="flex items-center gap-2 w-full px-3 py-2 rounded-lg hover:bg-white/10 text-secondary-foreground/70 transition-colors"
         >
           <LogOut size={20} />
           {!collapsed && <span className="text-sm">Sair</span>}

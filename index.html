@@ -19,6 +19,21 @@
     <meta property="og:locale" content="pt_BR" />
     <meta name="twitter:card" content="summary" />
     <title>Box-Inteligente - Casa do Biscoito</title>
+    <script>
+      (function () {
+        try {
+          var theme = localStorage.getItem('box-theme') || 'system';
+          var isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          var root = document.documentElement;
+          root.classList.toggle('dark', isDark);
+          root.style.colorScheme = isDark ? 'dark' : 'light';
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute('content', isDark ? '#0B1120' : '#FFFFFF');
+        } catch (e) {
+          /* ignore */
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

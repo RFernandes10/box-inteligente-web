@@ -1,18 +1,10 @@
 import { Bell, Search, Moon, Sun } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
-import { useState, useEffect } from 'react';
+import { useThemeStore } from '@/stores/themeStore';
 
 export function Header() {
   const { user } = useAuthStore();
-  const [darkMode, setDarkMode] = useState(false);
-
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [darkMode]);
+  const { isDark, toggleTheme } = useThemeStore();
 
   return (
     <header className="h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex items-center justify-between px-6 sticky top-0 z-30">
@@ -31,19 +23,22 @@ export function Header() {
 
       <div className="flex items-center gap-3">
         <button
-          onClick={() => setDarkMode(!darkMode)}
+          type="button"
+          onClick={toggleTheme}
+          aria-label={isDark ? 'Ativar modo claro' : 'Ativar modo escuro'}
+          title={isDark ? 'Ativar modo claro' : 'Ativar modo escuro'}
           className="p-2 rounded-lg hover:bg-muted transition-colors"
         >
-          {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+          {isDark ? <Sun size={18} /> : <Moon size={18} />}
         </button>
 
         <button className="relative p-2 rounded-lg hover:bg-muted transition-colors">
           <Bell size={18} />
-          <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+          <span className="absolute top-1 right-1 w-2 h-2 bg-danger rounded-full" />
         </button>
 
         <div className="flex items-center gap-2 pl-3 border-l">
-          <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold text-sm">
+          <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm">
             {user?.name?.charAt(0).toUpperCase()}
           </div>
           <div className="hidden sm:block">
