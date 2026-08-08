@@ -5,7 +5,7 @@ import { StockMovement, Product } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowDown, ArrowUp, Search } from 'lucide-react';
+import { ArrowDown, ArrowUp, Search, Trash2 } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useAuthStore } from '@/stores/authStore';
@@ -87,6 +87,23 @@ export function StockMovementsPage() {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      if (!confirm('Tem certeza que deseja limpar todo o histórico de movimentações? Esta ação não pode ser desfeita.')) {
+        throw new Error('CANCELLED');
+      }
+      return api.delete('/stock-movements');
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['movements'] });
+      toast.success('Histórico limpo!');
+    },
+    onError: (err: unknown) => {
+      if ((err as { message?: string })?.message === 'CANCELLED') return;
+      toast.error(getApiError(err, 'Erro ao limpar histórico'));
+    },
+  });
+
   const resetForm = () => { setSelectedProduct(null); setQuantity(''); setReason(''); setDocumentNumber(''); setProductSearch(''); };
 
   return (
@@ -100,10 +117,10 @@ export function StockMovementsPage() {
         {viewHistory && (
           <Button variant={tab === 'history' ? 'default' : 'outline'} onClick={() => setTab('history')}>Histórico</Button>
         )}
-        <Button variant={tab === 'entry' ? 'default' : 'outline'} onClick={() => setTab('entry')} className="bg-green-600 hover:bg-green-700">
+        <Button variant={tab === 'entry' ? 'default' : 'outline'} onClick={() => setTab('entry')} className={tab === 'entry' ? 'bg-success text-success-foreground hover:bg-success/90' : ""}>
           <ArrowDown className="h-4 w-4 mr-2" />Entrada
         </Button>
-        <Button variant={tab === 'exit' ? 'default' : 'outline'} onClick={() => setTab('exit')} className="bg-red-600 hover:bg-red-700">
+        <Button variant={tab === 'exit' ? 'default' : 'outline'} onClick={() => setTab('exit')} className={tab === 'exit' ? 'bg-danger text-danger-foreground hover:bg-danger/90' : ""}>
           <ArrowUp className="h-4 w-4 mr-2" />Saída
         </Button>
       </div>
@@ -160,7 +177,7 @@ export function StockMovementsPage() {
             <Button
               onClick={() => tab === 'entry' ? entryMutation.mutate() : exitMutation.mutate()}
               disabled={!selectedProduct || !quantity || entryMutation.isPending || exitMutation.isPending}
-              className={tab === 'entry' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}
+              className={tab === 'entry' ? 'bg-success text-success-foreground hover:bg-success/90' : 'bg-danger text-danger-foreground hover:bg-danger/90'}
             >
               {entryMutation.isPending || exitMutation.isPending ? 'Processando...' : tab === 'entry' ? 'Registrar Entrada' : 'Registrar Saída'}
             </Button>
@@ -170,8 +187,18 @@ export function StockMovementsPage() {
 
       {tab === 'history' && (
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
             <CardTitle>Histórico de Movimentações</CardTitle>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => deleteMutation.mutate()}
+              disabled={deleteMutation.isPending || !movements?.data?.length}
+              className="text-destructive border-destructive/50 hover:bg-destructive/10"
+            >
+              <Trash2 className="h-4 w-4 mr-2 text-destructive" />
+              {deleteMutation.isPending ? 'Limpando...' : 'Limpar Histórico'}
+            </Button>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -179,9 +206,9 @@ export function StockMovementsPage() {
                 <div key={mov.id} className="flex items-center justify-between p-4 border rounded-xl hover:bg-muted/50">
                   <div className="flex items-center gap-3">
                     {mov.type === 'ENTRY' ? (
-                      <div className="p-2 rounded-full bg-green-100"><ArrowDown className="h-4 w-4 text-green-600" /></div>
+                      <div className="p-2 rounded-full bg-success-soft"><ArrowDown className="h-4 w-4 text-success-soft-foreground" /></div>
                     ) : (
-                      <div className="p-2 rounded-full bg-red-100"><ArrowUp className="h-4 w-4 text-red-600" /></div>
+                      <div className="p-2 rounded-full bg-danger-soft"><ArrowUp className="h-4 w-4 text-danger-soft-foreground" /></div>
                     )}
                     <div>
                       <p className="font-medium text-sm">{mov.product.name}</p>
@@ -189,7 +216,7 @@ export function StockMovementsPage() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className={`font-bold ${mov.type === 'ENTRY' ? 'text-green-600' : 'text-red-600'}`}>
+                    <p className={`font-bold ${mov.type === 'ENTRY' ? 'text-success' : 'text-danger'}`}>
                       {mov.type === 'ENTRY' ? '+' : '-'}{mov.quantity} un
                     </p>
                     <p className="text-xs text-muted-foreground">{mov.previousStock} → {mov.newStock}</p>
