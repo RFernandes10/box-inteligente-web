@@ -5,10 +5,14 @@ import { User } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ChangePasswordForm } from '@/components/auth/ChangePasswordForm';
 import { Plus, Edit, Trash2, UserCheck, UserX } from 'lucide-react';
 import { toast } from 'react-toastify';
+import { useAuthStore } from '@/stores/authStore';
+import { getApiError } from '@/utils/errors';
 
 export function SettingsPage() {
+  const { user: currentUser } = useAuthStore();
   const [showForm, setShowForm] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [form, setForm] = useState({ name: '', email: '', password: '', role: 'STOCKIST' as string });
@@ -36,11 +40,13 @@ export function SettingsPage() {
   const toggleMutation = useMutation({
     mutationFn: (id: string) => api.patch(`/users/${id}/status`),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['users'] }); toast.success('Status atualizado'); },
+    onError: (err: unknown) => toast.error(getApiError(err, 'Erro ao atualizar status')),
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => api.delete(`/users/${id}`),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['users'] }); toast.success('Usuário removido'); },
+    onError: (err: unknown) => toast.error(getApiError(err, 'Erro ao remover usuário')),
   });
 
   const resetForm = () => { setShowForm(false); setEditingUser(null); setForm({ name: '', email: '', password: '', role: 'STOCKIST' }); };
@@ -77,6 +83,15 @@ export function SettingsPage() {
         </Card>
       )}
 
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader><CardTitle>Minha senha</CardTitle></CardHeader>
+          <CardContent>
+            <ChangePasswordForm />
+          </CardContent>
+        </Card>
+      </div>
+
       <Card>
         <CardHeader><CardTitle>Usuários</CardTitle></CardHeader>
         <CardContent>
@@ -84,7 +99,7 @@ export function SettingsPage() {
             {data?.data?.map((user: User) => (
               <div key={user.id} className="flex items-center justify-between p-4 border rounded-xl">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">
+                  <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold">
                     {user.name.charAt(0).toUpperCase()}
                   </div>
                   <div>
@@ -93,17 +108,21 @@ export function SettingsPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className={`px-2 py-1 text-xs rounded-full ${user.active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                  <span className={`px-2 py-1 text-xs rounded-full ${user.active ? 'bg-success-soft text-success-soft-foreground' : 'bg-danger-soft text-danger-soft-foreground'}`}>
                     {user.active ? 'Ativo' : 'Inativo'}
                   </span>
-                  <Button variant="ghost" size="icon" onClick={() => toggleMutation.mutate(user.id)}>
-                    {user.active ? <UserX size={16} /> : <UserCheck size={16} />}
-                  </Button>
+                  {user.id !== currentUser?.id && (
+                    <>
+                      <Button variant="ghost" size="icon" onClick={() => toggleMutation.mutate(user.id)}>
+                        {user.active ? <UserX size={16} /> : <UserCheck size={16} />}
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => { if (confirm('Remover?')) deleteMutation.mutate(user.id); }}>
+                        <Trash2 size={16} className="text-destructive" />
+                      </Button>
+                    </>
+                  )}
                   <Button variant="ghost" size="icon" onClick={() => { setEditingUser(user); setForm({ name: user.name, email: user.email, password: '', role: user.role }); setShowForm(true); }}>
                     <Edit size={16} />
-                  </Button>
-                  <Button variant="ghost" size="icon" onClick={() => { if (confirm('Remover?')) deleteMutation.mutate(user.id); }}>
-                    <Trash2 size={16} className="text-red-500" />
                   </Button>
                 </div>
               </div>
