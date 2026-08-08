@@ -11,6 +11,7 @@ import { RequireRole } from '@/components/layout/RequireRole';
 import { PageFallback } from '@/components/layout/PageFallback';
 
 const LoginPage = lazy(() => import('@/pages/Login/LoginPage').then((m) => ({ default: m.LoginPage })));
+const ChangePasswordPage = lazy(() => import('@/pages/ChangePassword/ChangePasswordPage').then((m) => ({ default: m.ChangePasswordPage })));
 const DashboardPage = lazy(() => import('@/pages/Dashboard/DashboardPage').then((m) => ({ default: m.DashboardPage })));
 const ProductListPage = lazy(() => import('@/pages/Products/ProductListPage').then((m) => ({ default: m.ProductListPage })));
 const ProductFormPage = lazy(() => import('@/pages/Products/ProductFormPage').then((m) => ({ default: m.ProductFormPage })));
@@ -48,6 +49,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<PageLoader><LoginPage /></PageLoader>} />
+          <Route path="/change-password" element={<PageLoader><ChangePasswordPage /></PageLoader>} />
           <Route element={<ProtectedRoute />}>
             <Route element={<RequireRole roles={['ADMIN', 'MANAGER']} redirectTo="/products" />}>
               <Route index element={<PageLoader><DashboardPage /></PageLoader>} />

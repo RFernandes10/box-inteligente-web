@@ -4,6 +4,7 @@ export interface User {
   email: string;
   role: 'ADMIN' | 'MANAGER' | 'STOCKIST';
   active: boolean;
+  mustChangePassword?: boolean;
   createdAt: string;
 }
 
